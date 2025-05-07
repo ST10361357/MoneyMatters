@@ -9,10 +9,10 @@ data class Expense(
     val expenseName: String,
     val description: String,
     val amount: Double,
-    val date: Long,
-    val startTime: Long,
-    val endTime : Long,
-    val photo: String? = null,//opptional
+    val date: String,
+    val startTime: String,
+    val endTime : String,
+    val photo: String? = null,//optional
     val categoryId: Int//references the Category tables
 )
 
