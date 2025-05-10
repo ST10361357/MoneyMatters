@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="16dp"
+    android:orientation="vertical"
+    tools:context=".uiActivities.GoalActivity">
+
+    <!-- App Title -->
+    <TextView
+        android:id="@+id/textViewBudgetTracker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Money Matters - Goals"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:paddingBottom="16dp"/>
+
+    <!-- Month Picker -->
+    <EditText
+        android:id="@+id/monthSelectionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Select Month (YYYY-MM)"
+        android:focusable="false"
+        android:clickable="true"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:padding="8dp"/>
+
+    <!-- Goal Inputs -->
+    <EditText
+        android:id="@+id/minGoal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Enter minimum goal"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/maxGoal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Enter maximum goal"
+        android:inputType="numberDecimal"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Save/View Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/buttonSaveGoal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Save Goal"
+            android:backgroundTint="@color/black"
+            android:textColor="@android:color/white"/>
+
+        <Button
+            android:id="@+id/buttonViewGoals"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="View Goals"
+            android:backgroundTint="@color/black"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <!-- RecyclerView for Goals -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewGoals"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>
