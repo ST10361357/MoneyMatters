@@ -20,7 +20,6 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Registration button click listener
         binding.buttonRegister.setOnClickListener {
             val email = binding.email.text.toString().trim()
             val password = binding.password.text.toString().trim()
@@ -31,21 +30,20 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Validate password strength
+            // Validate password
             if (password.length < 6) {
                 showToast("Password must be at least 6 characters!")
                 return@setOnClickListener
             }
 
-            // Create new user object
-            val newUser = User(0, email, password) // Room auto-generates userId
+            //  new user object
+            val newUser = User(0, email, password)
 
-            // Save to Room Database (Runs in a separate thread)
+            // save to db
             Thread {
                 val db = AppDb.getDb(applicationContext)
                 db.UserDao().registerUser(newUser)
 
-                // Ensure UI updates happen in main thread
                 runOnUiThread {
                     showToast("Registration Successful!")
                     startActivity(Intent(this, LoginActivity::class.java))
@@ -56,6 +54,6 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }

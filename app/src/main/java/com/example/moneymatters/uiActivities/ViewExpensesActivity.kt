@@ -50,7 +50,7 @@ class ViewExpensesActivity : AppCompatActivity() {
 
         // Search Button Listener with changed format
         binding.searchButton.setOnClickListener {
-
+            Log.d("SearchDebug", "Search button clicked")
             if (binding.startDateEditText.text.toString().trim().isEmpty() || binding.endDateEditText.text.toString().trim().isEmpty()) {
                 showToast("Please enter both start and end dates")
             }
@@ -86,6 +86,7 @@ class ViewExpensesActivity : AppCompatActivity() {
             Log.d("SearchDebug", "Filtered Expenses: $filteredExpenses")
             withContext(Dispatchers.Main) {
                 adapter.updateExpenses(filteredExpenses)
+                binding.recyclerView.visibility = View.VISIBLE
             }
         }
     }

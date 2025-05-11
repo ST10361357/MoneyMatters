@@ -22,7 +22,7 @@
         android:layout_width="400dp"
         android:layout_marginTop="50dp"
         android:layout_height="wrap_content"
-        android:text="Money Matters - Register if you don't have an account"
+        android:text="Money Matters - Register"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="20sp"

@@ -22,7 +22,6 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Login button click listener
         binding.buttonLogin.setOnClickListener {
             val email = binding.email.text.toString().trim()
             val password = binding.password.text.toString().trim()
@@ -35,16 +34,21 @@ class LoginActivity : AppCompatActivity() {
 
             // Authenticate User
             lifecycleScope.launch(Dispatchers.IO) {
-                val db = AppDb.getDb(applicationContext)
-                val user = db.UserDao().logIn(email, password)
+                try {
+                    val db = AppDb.getDb(applicationContext)
+                    val user = db.UserDao().logIn(email, password)
 
-                withContext(Dispatchers.Main) {
-                    if (user != null && user.password == password) {
-                        showToast("Login Successful!")
-                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                        finish()
-                    } else {
-                        showToast("Invalid email or password!")
+                    withContext(Dispatchers.Main) {
+                        if (user != null && user.password == password) {
+                            startActivity(Intent(this@LoginActivity, NavMenuActivity::class.java))
+                            finish()
+                        } else {
+                            showToast("Invalid email or password!")
+                        }
+                    }
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        showToast("Error: ${e.message}")
                     }
                 }
             }
@@ -52,6 +56,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }

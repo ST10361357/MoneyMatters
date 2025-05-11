@@ -22,10 +22,32 @@
             </intent-filter>
         </activity>
         <!--registration view-->
-        <activity android:name=".uiActivities.RegisterActivity" />
+        <activity android:name=".uiActivities.RegisterActivity"/>
         <!--login view-->
-        <activity android:name=".uiActivities.LoginActivity" />
-        <activity android:name=".uiActivities.NavMenuActivity" />
+        <activity android:name=".uiActivities.LoginActivity"/>
+        <activity android:name="com.example.moneymatters.uiActivities.NavMenuActivity" />
+        <activity android:name="com.example.moneymatters.uiActivities.CategoryExpenseActivity" />
+        <activity android:name="com.example.moneymatters.uiActivities.GoalActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.moneymatters.provider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <activity android:name="com.example.moneymatters.uiActivities.ViewExpensesActivity"/>
+        <activity android:name="com.example.moneymatters.uiActivities.ViewCategoryExpenseTotalActivity"/>
+
     </application>
+    <!--use camera feature-->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+
 
 </manifest>

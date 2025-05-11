@@ -21,6 +21,7 @@ android {
         viewBinding = true
     }
 
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -57,4 +58,12 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
+    //glide
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    //recyclerView
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    //
+    implementation("androidx.activity:activity-ktx:1.7.0")
+
+
 }
