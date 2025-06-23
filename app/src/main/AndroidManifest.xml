@@ -40,7 +40,8 @@
         </provider>
         <activity android:name="com.example.moneymatters.uiActivities.ViewExpensesActivity"/>
         <activity android:name="com.example.moneymatters.uiActivities.ViewCategoryExpenseTotalActivity"/>
-
+        <!--graphics-->
+        <activity android:name="com.example.moneymatters.uiActivities.GoalCategoryChartActivity" />
     </application>
     <!--use camera feature-->
     <uses-feature android:name="android.hardware.camera" android:required="false" />

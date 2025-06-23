@@ -32,6 +32,9 @@ class NavMenuActivity : AppCompatActivity() {
         binding.buttonViewTotals.setOnClickListener {
             startActivity(Intent(this, ViewCategoryExpenseTotalActivity::class.java))
         }
+        binding.buttonChartCategory.setOnClickListener {
+            startActivity(Intent(this, GoalCategoryChartActivity::class.java))
+        }
     }
 
     private fun showToast(message: String) {
