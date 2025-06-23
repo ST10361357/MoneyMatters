@@ -65,5 +65,9 @@ dependencies {
     //
     implementation("androidx.activity:activity-ktx:1.7.0")
 
+    //MPAndroidChart for graphs
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+
 
 }
