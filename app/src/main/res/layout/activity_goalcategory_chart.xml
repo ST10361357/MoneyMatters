@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Start Date Input -->
     <EditText
         android:id="@+id/startDateEditText"
         android:layout_width="match_parent"
@@ -11,6 +12,7 @@
         android:layout_height="48dp"
         android:hint="Start Date" />
 
+    <!-- End Date Input -->
     <EditText
         android:id="@+id/endDateEditText"
         android:layout_width="match_parent"
@@ -18,6 +20,7 @@
         android:hint="End Date"
         android:layout_marginTop="8dp" />
 
+    <!-- Search Button -->
     <Button
         android:id="@+id/searchButton"
         android:layout_width="match_parent"
@@ -25,19 +28,45 @@
         android:text="Search"
         android:layout_marginTop="8dp" />
 
+    <!-- Expense Chart -->
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/goalProgressChart"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginTop="16dp" />
 
+    <!-- Streak Status Text -->
     <TextView
         android:id="@+id/streakTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Current Streak: 0 day(s) under budget"
-        android:textSize="18sp"
+        android:text="🔥 Current Streak: 0 day(s) under budget"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/teal_700"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal" />
+
+    <!-- Emoji display based on streak level -->
+    <TextView
+        android:id="@+id/streakEmoji"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="😐"
+        android:textSize="24sp"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center_horizontal" />
+
+    <!--  Progress Bar -->
+    <ProgressBar
+        android:id="@+id/weeklyProgressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:layout_gravity="center_horizontal"/>
+        android:max="7"
+        android:progress="0"
+        android:progressTint="@android:color/holo_green_dark" />
 </LinearLayout>
+
 

@@ -68,6 +68,9 @@ dependencies {
     //MPAndroidChart for graphs
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
+    //Add Firestore
+    implementation("com.google.firebase:firebase-firestore-ktx")
+
 
 
 }
