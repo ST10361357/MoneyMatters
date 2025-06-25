@@ -1,10 +1,19 @@
 # MoneyMatters
-Part2
+Part2 + Final POE
 
 
 
 Money Matters
-Money Matters is a personal finance tracking application designed to help users manage expenses, set budget goals, and analyze spending habits. The project is built using Kotlin, with data persistence handled by RoomDB.
+Money Matters is a personal finance tracking application designed to help users manage expenses, set budget goals, and analyze spending habits. The project is built using Kotlin, and features include 
+User Authentication using Firebase for secure sign-up and login
+
+Data Persistence powered by RoomDB for local storage of goals and expenses
+
+Dark Mode Support that adapts to system theme preferences
+
+Category-Based Visualizations for tracking spending patterns using charts
+
+Frozen Budget Categories: Users can temporarily freeze specific categories to lock spending and stay disciplined
 
 -Project Overview
 -GitHub Repository: Money Matters
@@ -34,6 +43,11 @@ GoalAdapter.kt
 Holds entity classes used throughout the app:
 User.kt, Category.kt, Expense.kt, CategoryExpenseTotal.kt, Goal.kt
 
+--Repository(com.example.moneymatters.repository)--
+//expense data operations across Room and Firestore
+ExpenseRepository.kt
+
+
 --UI Activities (com.example.moneymatters.uiActivity)--
 Contains screen-specific Kotlin classes for handling user interactions:
 UserActivity.kt, CategoryActivity.kt, ExpenseActivity.kt
@@ -53,7 +67,9 @@ Authentication: activity_login.xml, activity_register.xml
 Dashboard: activity_main.xml, activity_navmenu.xml
 Expense Management: activity_category_expense.xml, activity_item_expense.xml, activity_view_expense.xml
 Goals: activity_goal.xml, item_goal.xml, goal_item.xml
-Category Summary: activity_viewcategory_expensetotal.xml, category_item.xml
+Category Summary: activity_viewcategory_expensetotal.xml, category_item.xml, activity_goalcategory_chart.xml, activity_goalcategory_chart.xml
+
+
 
 --Manifest (AndroidManifest.xml)--
 Defines the app’s permissions, activities, and UI layouts.
@@ -65,6 +81,9 @@ Detailed Expense Entries (Name, Description, Amount, Date, Time, Image Upload)
 Budget Goals (Min & Max Monthly Budget)
 Expense Filtering by User-Selected Period
 Category-Wise Expense Breakdown
+Dark Mode
+Freeze Category
+Graphics
 
 How to Run the App
 --Clone the repository:--
@@ -74,3 +93,16 @@ Open in Android Studio (ensure compileSdk = 35, targetSdk = 34).
 Install dependencies via Gradle.
 
 Run the project on Pixel 6 Pro Emulator (API 24, Portrait mode).
+
+--Test data
+peterparker@email.com -- username
+Levels@1 -- password
+
+kimpossible@zmail.com -- username
+Wesn@1 -- password
+
+Dark Mode Support
+The app now automatically adjusts to the device’s system theme. When dark mode is enabled on the device, all UI elements adapt to a darker color palette and requires no manual toggling by the user.
+
+ Freezing Budget Categories
+Users can now freeze specific budget categories, locking their values to prevent spending over a specified time.
