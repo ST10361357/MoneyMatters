@@ -69,8 +69,10 @@ dependencies {
 
 // Firebase with BOM
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
+
 
 // Testing
     testImplementation("junit:junit:4.13.2")

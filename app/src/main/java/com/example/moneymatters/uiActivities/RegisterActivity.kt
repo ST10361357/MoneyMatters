@@ -6,19 +6,27 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.moneymatters.data.User
 import android.util.Patterns
+import androidx.lifecycle.lifecycleScope
 import com.example.moneymatters.database.AppDb
 import com.example.moneymatters.databinding.ActivityRegisterBinding
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterBinding
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize View Binding
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        auth = FirebaseAuth.getInstance()
 
         binding.buttonRegister.setOnClickListener {
             val email = binding.email.text.toString().trim()
@@ -36,20 +44,25 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            //  new user object
-            val newUser = User(0, email, password)
+            // Create user in Firebase first
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Now store user in local Room DB
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            val db = AppDb.getDb(applicationContext)
+                            db.UserDao().registerUser(User(0, email, password))
 
-            // save to db
-            Thread {
-                val db = AppDb.getDb(applicationContext)
-                db.UserDao().registerUser(newUser)
-
-                runOnUiThread {
-                    showToast("Registration Successful!")
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    finish()
+                            withContext(Dispatchers.Main) {
+                                showToast("Registration successful!")
+                                startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+                                finish()
+                            }
+                        }
+                    } else {
+                        showToast("Firebase registration failed: ${task.exception?.message}")
+                    }
                 }
-            }.start()
         }
     }
 
