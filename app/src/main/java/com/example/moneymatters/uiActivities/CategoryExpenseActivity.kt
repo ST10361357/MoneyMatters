@@ -24,17 +24,24 @@ import com.example.moneymatters.data.Expense
 import com.example.moneymatters.database.AppDb
 import com.example.moneymatters.database.CategoryDao
 import com.example.moneymatters.database.ExpenseDao
+import com.example.moneymatters.database.FrozenCategoryDao
 import com.example.moneymatters.databinding.ActivityCategoryExpenseBinding
 import kotlinx.coroutines.launch
 import androidx.activity.result.contract.ActivityResultContracts
 import android.Manifest
 import android.os.Environment
 import android.util.Log
+import android.widget.CheckBox
+import android.widget.LinearLayout
 import androidx.core.content.FileProvider
+import com.example.moneymatters.data.FrozenCategory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class CategoryExpenseActivity : AppCompatActivity() {
 
@@ -125,7 +132,7 @@ class CategoryExpenseActivity : AppCompatActivity() {
                 }
         }
     }
-
+/*
     // new category
     private fun showAddCategoryDialog() {
         val userInput = EditText(this) // Create input field
@@ -153,7 +160,96 @@ class CategoryExpenseActivity : AppCompatActivity() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }*/
+    //udate to freeze spending on ccertain catergories
+private fun showAddCategoryDialog() {
+    val userInput = EditText(this).apply {
+        hint = "e.g., Takeout, Subscriptions"
     }
+
+    val freezeNowCheckBox = CheckBox(this).apply {
+        text = "Freeze this category now"
+    }
+
+    val startDateEdit = EditText(this).apply {
+        hint = "Start Date (dd/MM/yyyy)"
+        isEnabled = false
+    }
+
+    val endDateEdit = EditText(this).apply {
+        hint = "End Date (dd/MM/yyyy)"
+        isEnabled = false
+    }
+
+    // Enable date pickers only if checkbox is checked
+    freezeNowCheckBox.setOnCheckedChangeListener { _, isChecked ->
+        startDateEdit.isEnabled = isChecked
+        endDateEdit.isEnabled = isChecked
+    }
+
+    val layout = LinearLayout(this).apply {
+        orientation = LinearLayout.VERTICAL
+        setPadding(50, 20, 50, 0)
+        addView(userInput)
+        addView(freezeNowCheckBox)
+        addView(startDateEdit)
+        addView(endDateEdit)
+    }
+
+    // Date picker dialogs
+    fun pickDate(target: EditText) {
+        val cal = Calendar.getInstance()
+        DatePickerDialog(this, { _, year, month, day ->
+            target.setText(String.format("%02d/%02d/%04d", day, month + 1, year))
+        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+    }
+
+    startDateEdit.setOnClickListener { pickDate(startDateEdit) }
+    endDateEdit.setOnClickListener { pickDate(endDateEdit) }
+
+    AlertDialog.Builder(this)
+        .setTitle("Enter new category")
+        .setView(layout)
+        .setPositiveButton("Add") { _, _ ->
+            val newCategoryName = userInput.text.toString().trim()
+
+            if (newCategoryName.isNotEmpty()) {
+                val newCategory = Category(categoryName = newCategoryName)
+
+                lifecycleScope.launch {
+                    categoryDao.addCategory(newCategory)
+
+                    if (freezeNowCheckBox.isChecked &&
+                        startDateEdit.text.isNotEmpty() &&
+                        endDateEdit.text.isNotEmpty()) {
+
+                        val freeze = FrozenCategory(
+                            categoryName = newCategoryName,
+                            startDate = startDateEdit.text.toString(),
+                            endDate = endDateEdit.text.toString()
+                        )
+
+                        val db = AppDb.getDb(this@CategoryExpenseActivity)
+                        db.FrozenCategoryDao().freezeCategory(freeze)
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@CategoryExpenseActivity,
+                            "Category added${if (freezeNowCheckBox.isChecked) " and frozen" else ""}!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Category name cannot be empty!", Toast.LENGTH_SHORT).show()
+            }
+        }
+        .setNegativeButton("Cancel", null)
+        .show()
+}
+
+
 
     // date picker
     private fun setupDatePicker() {
@@ -304,7 +400,7 @@ class CategoryExpenseActivity : AppCompatActivity() {
     }
 
     //epense to db
-    private fun insertExpense() {
+   /* private fun insertExpense() {
         val expenseName = binding.expenseName.text.toString()
         val description = binding.expenseDescription.text.toString()
         val amount = binding.expenseAmount.text.toString().toDoubleOrNull() ?: 0.0
@@ -374,6 +470,114 @@ class CategoryExpenseActivity : AppCompatActivity() {
             Log.d("ExpenseDebug", "Submit button clicked!")
             Toast.makeText(this, "Submit button clicked!", Toast.LENGTH_SHORT).show()
             insertExpense()
+        }
+    }*/
+
+
+    //insert expense with frozen category considered
+
+    private fun insertExpense() {
+        val expenseName = binding.expenseName.text.toString()
+        val description = binding.expenseDescription.text.toString()
+        val amount = binding.expenseAmount.text.toString().toDoubleOrNull() ?: 0.0
+        val selectedDate = binding.expenseDateButton.text.toString()
+        val startTime = binding.expenseStartTimeButton.text.toString()
+        val endTime = binding.expenseEndTimeButton.text.toString()
+        val selectedCategory = binding.categorySpinner.selectedItem.toString()
+
+        // Validate required fields
+        if (expenseName.isEmpty() || description.isEmpty() || selectedCategory.isEmpty()) {
+            showToast("Please fill in all required fields!")
+            return
+        }
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                // ❄️ Check if selected category is frozen for today
+                val today = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+                val db = AppDb.getDb(this@CategoryExpenseActivity)
+                val frozen = db.FrozenCategoryDao().isFrozen(selectedCategory, today)
+
+                if (frozen != null) {
+                    withContext(Dispatchers.Main) {
+                        showToast("🚫 '$selectedCategory' is currently frozen. Expense not allowed.")
+                    }
+                    return@launch
+                }
+
+                // ✅ Proceed with category lookup
+                var categoryId = categoryDao.getCategoryId(selectedCategory)
+                if (categoryId == null) {
+                    Log.d("ExpenseDebug", "Adding new category: $selectedCategory")
+                    categoryDao.addCategory(Category(categoryName = selectedCategory))
+
+                    categoryId = categoryDao.getCategoryId(selectedCategory)
+                    if (categoryId == null) {
+                        withContext(Dispatchers.Main) {
+                            showToast("Error: Failed to retrieve category ID after insertion!")
+                        }
+                        Log.e("ExpenseDebug", "Category insertion failed for: $selectedCategory")
+                        return@launch
+                    }
+                }
+
+                // Create the Expense object
+                val expense = Expense(
+                    expenseName = expenseName,
+                    description = description,
+                    amount = amount,
+                    date = selectedDate,
+                    startTime = startTime,
+                    endTime = endTime,
+                    photo = photoUri?.toString(),
+                    categoryId = categoryId
+                )
+
+                Log.d("ExpenseDebug", "Attempting to insert expense: $expense")
+                expenseDao.addExpense(expense)
+
+                val allExpenses = expenseDao.getAllExpenses()
+                Log.d("ExpenseDebug", "Total expenses after insertion: $allExpenses")
+
+                withContext(Dispatchers.Main) {
+                    showToast("Expense added successfully!")
+                    val intent = Intent(this@CategoryExpenseActivity, NavMenuActivity::class.java)
+                    startActivity(intent)
+                }
+            } catch (e: Exception) {
+                Log.e("ExpenseDebug", "Error inserting expense", e)
+                withContext(Dispatchers.Main) {
+                    showToast("Failed to add expense. Please try again.")
+                }
+            }
+        }
+    }
+
+    private fun setupSubmitButton() {
+        binding.buttonSubmitExpense.setOnClickListener {
+            Log.d("ExpenseDebug", "Submit button clicked!")
+
+            val selectedCategory = binding.categorySpinner.selectedItem.toString()
+            val today = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+
+            lifecycleScope.launch {
+                val db = AppDb.getDb(this@CategoryExpenseActivity)
+                val frozen = db.FrozenCategoryDao().isFrozen(selectedCategory, today)
+
+                if (frozen != null) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@CategoryExpenseActivity,
+                            "🚫 '$selectedCategory' is currently frozen. Expense not allowed.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    return@launch
+                }
+
+                // Not frozen → proceed
+                insertExpense()
+            }
         }
     }
 

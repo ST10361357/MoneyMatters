@@ -6,16 +6,18 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.moneymatters.data.Category
 import com.example.moneymatters.data.Expense
+import com.example.moneymatters.data.FrozenCategory
 import com.example.moneymatters.data.Goal
 import com.example.moneymatters.data.User
 
-@Database(entities = [User::class, Category::class, Expense::class, Goal::class], version = 1)
+@Database(entities = [User::class, Category::class, Expense::class, Goal::class, FrozenCategory::class], version = 1)
 abstract class AppDb: RoomDatabase() {
     abstract fun UserDao(): UserDao
     abstract fun CategoryDao(): CategoryDao
     abstract fun ExpenseDao(): ExpenseDao
 
     abstract fun GoalDao(): GoalDao
+    abstract fun FrozenCategoryDao(): FrozenCategoryDao
 
     //db instance
     companion object {

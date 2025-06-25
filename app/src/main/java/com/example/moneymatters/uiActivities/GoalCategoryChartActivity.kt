@@ -1,7 +1,9 @@
 package com.example.moneymatters.uiActivities
 
+import android.animation.ObjectAnimator
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.view.animation.DecelerateInterpolator
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -71,9 +73,16 @@ class GoalCategoryChartActivity : AppCompatActivity() {
                     6, 7 -> "🤑"     // Crushing it!
                     else -> "😐"     // No progress yet
                 }
+                // Animate progress bar fill
+                ObjectAnimator.ofInt(binding.weeklyProgressBar, "progress", daysUnderBudgetThisWeek.coerceAtMost(7)).apply {
+                    duration = 500
+                    interpolator = DecelerateInterpolator()
+                    start()
+                }
             }
         }
     }
+
 
     //Populates the chart with category-based expense data.
     private fun setupGoalChart(data: List<CategoryExpenseTotal>) {
