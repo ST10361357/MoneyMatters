@@ -95,11 +95,8 @@ Install dependencies via Gradle.
 Run the project on Pixel 6 Pro Emulator (API 24, Portrait mode).
 
 --Test data
-peterparker@email.com -- username
-Levels@1 -- password
-
-kimpossible@zmail.com -- username
-Wesn@1 -- password
+congests17@gmail.com
+Forbidden@1
 
 Dark Mode Support
 The app now automatically adjusts to the device’s system theme. When dark mode is enabled on the device, all UI elements adapt to a darker color palette and requires no manual toggling by the user.
