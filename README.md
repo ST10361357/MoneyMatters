@@ -103,3 +103,6 @@ The app now automatically adjusts to the device’s system theme. When dark mode
 
  Freezing Budget Categories
 Users can now freeze specific budget categories, locking their values to prevent spending over a specified time.
+
+--Download App--
+https://st10361357.github.io/MoneyMatters/
