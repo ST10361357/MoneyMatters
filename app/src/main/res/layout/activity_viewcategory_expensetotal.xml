@@ -15,6 +15,7 @@
         android:text="Category Expense Totals"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="@color/text_primary"
         android:layout_gravity="center"
         android:paddingBottom="10dp"/>
 
@@ -42,8 +43,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View Totals"
-        android:textColor="@android:color/white"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/button_background"
+        android:textColor="@color/button_text"
         android:layout_gravity="center"/>
 
     <!-- RecyclerView -->

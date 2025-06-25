@@ -43,10 +43,4 @@ interface ExpenseDao {
     fun getCategoryTotals(startDate: String, endDate: String): List<CategoryExpenseTotal>
 
 
-
-
-
-
-
-
 }

@@ -24,18 +24,22 @@ class GoalCategoryChartActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGoalcategoryChartBinding
     private lateinit var db: AppDb
-    private val dailyGoal = 500.0 // Customize this goal as needed
+    private val dailyGoal = 500.0 // Daily budget goal – adjust this value as needed
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // ViewBinding setup
         binding = ActivityGoalcategoryChartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Initialize database instance
         db = AppDb.getDb(this)
 
+        // Set up date pickers for start and end date fields
         binding.startDateEditText.setOnClickListener { showDatePicker(binding.startDateEditText) }
         binding.endDateEditText.setOnClickListener { showDatePicker(binding.endDateEditText) }
 
+        // When user clicks "Search", fetch and display data
         binding.searchButton.setOnClickListener {
             val start = binding.startDateEditText.text.toString()
             val end = binding.endDateEditText.text.toString()
@@ -43,18 +47,35 @@ class GoalCategoryChartActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Fetches categorized expenses from the db for the selected date range,
+     * calculates the under-budget streak, and updates the UI.
+     */
     private fun fetchAndDisplayData(startDate: String, endDate: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             val categoryTotals = db.ExpenseDao().getCategoryTotals(startDate, endDate)
             val streak = calculateStreak(categoryTotals, dailyGoal)
 
             withContext(Dispatchers.Main) {
+                // Update bar chart with the data
                 setupGoalChart(categoryTotals)
+
+                // Show current streak with fire emoji
                 binding.streakTextView.text = "🔥 Current Streak: $streak day(s) under budget"
+
+                // Update emoji dynamically based on 7-day streak level
+                val daysUnderBudgetThisWeek = streak % 7
+                binding.streakEmoji.text = when (daysUnderBudgetThisWeek) {
+                    in 1..2 -> "💸"  // Getting started
+                    in 3..5 -> "💰"  // On a roll
+                    6, 7 -> "🤑"     // Crushing it!
+                    else -> "😐"     // No progress yet
+                }
             }
         }
     }
 
+    //Populates the chart with category-based expense data.
     private fun setupGoalChart(data: List<CategoryExpenseTotal>) {
         val entries = ArrayList<BarEntry>()
         val labels = ArrayList<String>()
@@ -70,6 +91,7 @@ class GoalCategoryChartActivity : AppCompatActivity() {
         val barData = BarData(dataSet)
         barData.barWidth = 0.9f
 
+        // update the look of  chart
         binding.goalProgressChart.apply {
             this.data = barData
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
@@ -80,12 +102,12 @@ class GoalCategoryChartActivity : AppCompatActivity() {
             axisRight.isEnabled = false
             description.isEnabled = false
             setFitBars(true)
-            invalidate()
+            invalidate() // Refresh chart
         }
     }
 
+    //Calculates days in a row were under the daily goal.
     private fun calculateStreak(data: List<CategoryExpenseTotal>, goal: Double): Int {
-        // Since no date is available, we assume each entry is a day
         var streak = 0
         for (entry in data) {
             if (entry.totalAmount <= goal) streak++
@@ -93,6 +115,8 @@ class GoalCategoryChartActivity : AppCompatActivity() {
         }
         return streak
     }
+
+    //Shows date picker and selected date
 
     private fun showDatePicker(editText: EditText) {
         val calendar = Calendar.getInstance()

@@ -4,6 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- App Title -->
+    <TextView
+        android:id="@+id/textViewTrackBudget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Money Matters - Track Spending"
+        android:textAlignment="center"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:paddingBottom="16dp"/>
     <!-- Start Date Input -->
     <EditText
         android:id="@+id/startDateEditText"
@@ -23,6 +34,8 @@
     <!-- Search Button -->
     <Button
         android:id="@+id/searchButton"
+        android:backgroundTint="@color/button_background"
+        android:textColor="@color/button_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Search"
@@ -66,7 +79,7 @@
         android:layout_marginTop="12dp"
         android:max="7"
         android:progress="0"
-        android:progressTint="@android:color/holo_green_dark" />
+        android:textColor="@color/holo_green_dark"/>
 </LinearLayout>
 
 
