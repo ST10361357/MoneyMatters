@@ -1,6 +1,7 @@
 # MoneyMatters
-Part2 + Final POE
 
+🚨Note that the Main branch: Contains the README, the APK of your app, and a video demo(🚨scroll down to access links).
+🚨The Master branch: Holds the app folder with the actual source code.
 
 
 Money Matters
@@ -14,6 +15,8 @@ Dark Mode Support that adapts to system theme preferences
 Category-Based Visualizations for tracking spending patterns using charts
 
 Frozen Budget Categories: Users can temporarily freeze specific categories to lock spending and stay disciplined
+
+
 
 -Project Overview
 -GitHub Repository: Money Matters
@@ -106,3 +109,6 @@ Users can now freeze specific budget categories, locking their values to prevent
 
 --Download App--
 https://st10361357.github.io/MoneyMatters/
+
+--Youtube video demo--
+https://youtu.be/unW1MJNoXPI
